@@ -7,6 +7,5 @@ import android.graphics.Bitmap;
  */
 public interface IVerify {
     public boolean checkCode(String input);
-    public String getCode();
     public Bitmap createBitmap();
     }

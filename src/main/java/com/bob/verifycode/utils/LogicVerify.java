@@ -5,27 +5,30 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.Random;
 
 /**
- * 基本的随机验证码验证
+ * 具有逻辑算术的验证方法
  */
-public class BaseVerify implements IVerify{
+public class LogicVerify implements IVerify{
 
+    int result;
     private static final char[] CHARS = {//定义随机字符集
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            '零', '一','二', '三', '四', '五', '六', '七', '八', '九'
     };
 
-    private static BaseVerify vCode;
+    private static final String[] OPERATORS = {//定义随机字符集
+            "加上","减去","乘以","除以","+","-","×","÷"
+    };
 
-    public static BaseVerify getInstance() {//单例模式获取验证码对象
+    private static LogicVerify vCode;
+
+    public static LogicVerify getInstance() {//单例模式获取验证码对象
         if (vCode == null)
-            vCode = new BaseVerify();
+            vCode = new LogicVerify();
         return vCode;
     }
 
@@ -39,7 +42,6 @@ public class BaseVerify implements IVerify{
 //          font_size="20"
 
     //验证码固定参数，也就是将会用到的几个常量
-    private static final int DEFAULT_CODE_LENGTH = 4;//默认的代码长度，也就是会出现４个随机码
     private static final int DEFAULT_FONT_SIZE = 20;//字体大小
     private static final int DEFAULT_LINE_NUMBER = 3;//默认的用于干扰视线直线的条数
     private static final int BASE_PADDING_LEFT = 10, RANGE_PADDING_LEFT = 15, BASE_PADDING_TOP = 20, RANGE_PADDING_TOP = 10;
@@ -64,7 +66,7 @@ public class BaseVerify implements IVerify{
             base_padding_top = BASE_PADDING_TOP, range_padding_top = RANGE_PADDING_TOP;
 
     //number of chars, lines; font size
-    private int codeLength = DEFAULT_CODE_LENGTH, line_number = DEFAULT_LINE_NUMBER, font_size = DEFAULT_FONT_SIZE;
+    private int line_number = DEFAULT_LINE_NUMBER, font_size = DEFAULT_FONT_SIZE;
 
     //variables
     private String code;//存储随机生成的随机码序列
@@ -112,15 +114,13 @@ public class BaseVerify implements IVerify{
         return bp;//返回画好的位图
     }
 
-/*    public String getCode() {
-        return code;
-    }*/
 
     private String createCode() {//随机生成随机码
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; i < codeLength; i++) {//codeLength即就是验证码字母个数
-            buffer.append(CHARS[random.nextInt(CHARS.length)]);
-        }
+        buffer.append(CHARS[random.nextInt(CHARS.length)]);//获取第一个运算数
+        buffer.append(OPERATORS[random.nextInt(OPERATORS.length)]);//获取运算符
+        buffer.append(CHARS[random.nextInt(CHARS.length)]);//获取第二个运算数
+        buffer.append("= ");
         return buffer.toString();
     }
 
@@ -167,11 +167,47 @@ public class BaseVerify implements IVerify{
     }
 
     public boolean checkCode(String input) {//验证码校验
+        result= 0;
+        int arg1= char2Int(code.charAt(0));
+        String opt= code.substring(1, code.length() - 1);//java区间遵循左闭右开原则，所以length-1取到的是倒数第二个字符
+        int arg2= char2Int(code.charAt(code.length()-2));
 
-        if (input.equalsIgnoreCase(code)) {
-            return true;
-        } else {
-            return false;
+        Log.i("result",arg1+arg2+"");
+        switch (opt){
+            case "加上":case "+":
+            {
+                result= arg1+arg2;
+            }break;
+
+            case "减去":case "-":
+            {
+                result= arg1-arg2;
+            }break;
+
+            case "乘以":case "×":
+            {
+                result= arg1*arg2;
+            }break;
+
+            case "除以":case "÷":
+            {
+                result= arg1/arg2;
+            }
         }
+
+        if (Integer.parseInt(input)== result)
+            return true;
+        return false;
+    }
+
+    private int char2Int(char arg)
+    {
+        for (int i = 0; i < CHARS.length; i++) {
+            if (CHARS[i]==arg)
+                if (i>=10)
+                   return i-10;
+                else return i;
+        }
+        return 0;//默认返回0
     }
 }

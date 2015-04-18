@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bob.verifycode.R;
 import com.bob.verifycode.utils.BaseVerify;
 import com.bob.verifycode.utils.IVerify;
+import com.bob.verifycode.utils.LogicVerify;
 
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -31,11 +32,11 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bt_change = (Button) findViewById(R.id.bt_change);
-        bt_check = (Button) findViewById(R.id.bt_check);
+        bt_check = findViewById(R.id.bt_check);//在这里只需要强转一次就够了？？？
         verify_img = (ImageView) findViewById(R.id.img_verify);
         et_verify = (EditText) findViewById(R.id.et_verify);
         tv_check = (TextView) findViewById(R.id.tv_Check);
-        vCode = BaseVerify.getInstance();
+        vCode = LogicVerify.getInstance();
 
         verify_img.setImageBitmap(vCode.createBitmap());
 
