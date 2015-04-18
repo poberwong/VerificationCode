@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * 基本的随机验证码验证
  */
-public class BaseVerify {
+public class BaseVerify implements IVerify{
 
     private static final char[] CHARS = {//定义随机字符集
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
