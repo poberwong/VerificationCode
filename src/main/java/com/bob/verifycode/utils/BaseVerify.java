@@ -168,6 +168,7 @@ public class BaseVerify implements IVerify{
 
     public boolean checkCode(String input) {//验证码校验
 
+        input= input.trim();
         if (input.equalsIgnoreCase(code)) {
             return true;
         } else {

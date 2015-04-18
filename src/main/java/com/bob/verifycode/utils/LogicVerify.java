@@ -168,6 +168,7 @@ public class LogicVerify implements IVerify{
 
     public boolean checkCode(String input) {//验证码校验
         result= 0;
+        input= input.trim();
         int arg1= char2Int(code.charAt(0));
         String opt= code.substring(1, code.length() - 2);//java区间遵循左闭右开原则，所以length-2取到的是倒数第二个字符
         int arg2= char2Int(code.charAt(code.length()-2));
