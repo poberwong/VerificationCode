@@ -120,7 +120,7 @@ public class LogicVerify implements IVerify{
         buffer.append(CHARS[random.nextInt(CHARS.length)]);//获取第一个运算数
         buffer.append(OPERATORS[random.nextInt(OPERATORS.length)]);//获取运算符
         buffer.append(CHARS[random.nextInt(CHARS.length)]);//获取第二个运算数
-        buffer.append("= ");
+        buffer.append("=");
         return buffer.toString();
     }
 
@@ -169,10 +169,11 @@ public class LogicVerify implements IVerify{
     public boolean checkCode(String input) {//验证码校验
         result= 0;
         int arg1= char2Int(code.charAt(0));
-        String opt= code.substring(1, code.length() - 1);//java区间遵循左闭右开原则，所以length-1取到的是倒数第二个字符
+        String opt= code.substring(1, code.length() - 2);//java区间遵循左闭右开原则，所以length-2取到的是倒数第二个字符
         int arg2= char2Int(code.charAt(code.length()-2));
 
-        Log.i("result",arg1+arg2+"");
+        Log.i("result",arg1+"  "+arg2);
+        Log.i("opt",opt);
         switch (opt){
             case "加上":case "+":
             {
@@ -191,7 +192,9 @@ public class LogicVerify implements IVerify{
 
             case "除以":case "÷":
             {
-                result= arg1/arg2;
+                if (arg2==0)
+                    result= 0;
+                else result= arg1/arg2;
             }
         }
 
@@ -200,7 +203,7 @@ public class LogicVerify implements IVerify{
         return false;
     }
 
-    private int char2Int(char arg)
+    private int char2Int(char arg)//利用下标来转换字符
     {
         for (int i = 0; i < CHARS.length; i++) {
             if (CHARS[i]==arg)
