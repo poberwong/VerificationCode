@@ -37,7 +37,9 @@
             android:gravity="center"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
+            android:inputType="numberSigned"
             android:hint="请输入验证码" />
+        <!--一定要设置为带符号数，否则负数无法输入-->
         <!--记住，gravity为该控件内部东东的位置，layout_gravity为控件在父布局中的位置-->
 
         <TextView

@@ -5,6 +5,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import java.util.Random;
 
@@ -168,7 +169,9 @@ public class BaseVerify implements IVerify{
 
     public boolean checkCode(String input) {//验证码校验
 
-        input= input.trim();
+        input= input.trim();if(TextUtils.equals("", input))//空输入判为错
+            return false;
+        
         if (input.equalsIgnoreCase(code)) {
             return true;
         } else {

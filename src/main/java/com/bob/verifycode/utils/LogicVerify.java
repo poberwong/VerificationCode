@@ -5,6 +5,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Random;
@@ -12,16 +13,16 @@ import java.util.Random;
 /**
  * 具有逻辑算术的验证方法
  */
-public class LogicVerify implements IVerify{
+public class LogicVerify implements IVerify {
 
     int result;
     private static final char[] CHARS = {//定义随机字符集
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            '零', '一','二', '三', '四', '五', '六', '七', '八', '九'
+            '零', '一', '二', '三', '四', '五', '六', '七', '八', '九'
     };
 
     private static final String[] OPERATORS = {//定义随机字符集
-            "加上","减去","乘以","除以","+","-","×","÷"
+            "加上", "减去", "乘以", "除以", "+", "-", "×", "÷"
     };
 
     private static LogicVerify vCode;
@@ -167,49 +168,57 @@ public class LogicVerify implements IVerify{
     }
 
     public boolean checkCode(String input) {//验证码校验
-        result= 0;
-        input= input.trim();
-        int arg1= char2Int(code.charAt(0));
-        String opt= code.substring(1, code.length() - 2);//java区间遵循左闭右开原则，所以length-2取到的是倒数第二个字符
-        int arg2= char2Int(code.charAt(code.length()-2));
+        result = 0;
+        input = input.trim();//除掉空格
+        if(TextUtils.equals("", input))//空输入判为错
+            return false;
 
-        Log.i("result",arg1+"  "+arg2);
-        Log.i("opt",opt);
-        switch (opt){
-            case "加上":case "+":
-            {
-                result= arg1+arg2;
-            }break;
+        int arg1 = char2Int(code.charAt(0));
+        String opt = code.substring(1, code.length() - 2);//java区间遵循左闭右开原则，所以length-2取到的是倒数第二个字符
+        int arg2 = char2Int(code.charAt(code.length() - 2));
 
-            case "减去":case "-":
-            {
-                result= arg1-arg2;
-            }break;
+        Log.i("result", arg1 + "  " + arg2);
+        Log.i("opt", opt);
 
-            case "乘以":case "×":
-            {
-                result= arg1*arg2;
-            }break;
+        switch (opt) {//计算正确结果
+            case "加上":
+            case "+": {
+                result = arg1 + arg2;
+            }
+            break;
 
-            case "除以":case "÷":
-            {
-                if (arg2==0)
-                    result= 0;
-                else result= arg1/arg2;
+            case "减去":
+            case "-": {
+                result = arg1 - arg2;
+            }
+            break;
+
+            case "乘以":
+            case "×": {
+                result = arg1 * arg2;
+            }
+            break;
+
+            case "除以":
+            case "÷": {
+                if (arg2 == 0)
+                    result = 0;
+                else result = arg1 / arg2;
             }
         }
 
-        if (Integer.parseInt(input)== result)
+        if (Integer.parseInt(input) == result)//如果在这里检测到异常抛出的话，容易使前边白做，因此提前
             return true;
         return false;
     }
 
+
     private int char2Int(char arg)//利用下标来转换字符
     {
         for (int i = 0; i < CHARS.length; i++) {
-            if (CHARS[i]==arg)
-                if (i>=10)
-                   return i-10;
+            if (CHARS[i] == arg)
+                if (i >= 10)
+                    return i - 10;
                 else return i;
         }
         return 0;//默认返回0
